@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('achats_utilisateurs', function (Blueprint $table) {
             $table->foreignId("user_id")->constrained("users")->cascadeOnDelete();
-            $table->foreignId("musique_id")->constrained("Musique")->cascadeOnDelete();
+            $table->foreignId("musique_id")->constrained("musiques")->cascadeOnDelete();
 
             $table->dateTime("date_achat")->useCurrent();
 

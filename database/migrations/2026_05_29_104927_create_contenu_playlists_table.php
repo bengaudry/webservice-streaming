@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('contenu_playlists', function (Blueprint $table) {
-            $table->foreignId("musique_id")->constrained("Musique")->cascadeOnDelete();
-            $table->foreignId("playlist_id")->constrained("Playlist")->cascadeOnDelete();
+            $table->foreignId("musique_id")->constrained("musiques")->cascadeOnDelete();
+            $table->foreignId("playlist_id")->constrained("playlists")->cascadeOnDelete();
 
             $table->primary(["musique_id", "playlist_id"]);
         });

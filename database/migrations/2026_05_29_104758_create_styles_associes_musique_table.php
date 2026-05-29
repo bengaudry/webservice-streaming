@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('styles_associes_musique', function (Blueprint $table) {
-            $table->foreignId("musique_id")->constrained("Musique")->cascadeOnDelete();
-            $table->foreignId("style_id")->constrained("Style")->cascadeOnDelete();
+            $table->foreignId("musique_id")->constrained("musiques")->cascadeOnDelete();
+            $table->foreignId("style_id")->constrained("styles_musique")->cascadeOnDelete();
 
             $table->primary(["musique_id", "style_id"]);
         });
