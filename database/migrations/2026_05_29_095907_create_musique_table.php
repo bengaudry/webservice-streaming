@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('musique', function (Blueprint $table) {
             $table->id();
+            $table->timestamps();
             $table->string("nom");
-            $table->integer("dureeSecondes");
+            $table->integer("duree_secondes");
             $table->decimal("prix", 6, 2);
+            $table->foreignId("album_id")->constrained();
         });
     }
 
