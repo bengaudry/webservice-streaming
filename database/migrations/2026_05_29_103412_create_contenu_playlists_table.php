@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('contenu_playlists', function (Blueprint $table) {
             $table->foreignId("musique_id")->constrained("Musique")->cascadeOnDelete();
             $table->foreignId("playlist_id")->constrained("Playlist")->cascadeOnDelete();
+
+            $table->primary(["musique_id", "playlist_id"]);
         });
     }
 
