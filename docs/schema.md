@@ -1,16 +1,16 @@
 # Schéma relationnel
 
-**Musique** (**IdMusique**, NomMusique, DureeMusique, PrixMusique);
+**Musique** (**IdMusique**, NomMusique, DureeMusique, PrixMusique, _#IdAlbum_);
 
-**Album** (**IdAlbum**, NomAlbum, DateSortieAlbum, _#IdMusique_);
+**Album** (**IdAlbum**, NomAlbum, DateSortieAlbum, _#IdArtiste_);
 
-**Artiste** (**IdArtiste**, NomArtiste, _#IdAlbum_);
+**Artiste** (**IdArtiste**, NomArtiste);
 
 **StyleMusique** (NomStyle);
 
-**Playlist** (**IdPlaylist**, NomPlaylist);
+**Playlist** (**IdPlaylist**, NomPlaylist, _#IdUtilisateur_);
 
-**Utilisateur** (IdUtilisateur, PrenomUtilisateur, NomUtilisateur, EmailUtilisateur, DateInscriptionUtilisateur, _#IdPlaylist_);
+**Utilisateur** (IdUtilisateur, PrenomUtilisateur, NomUtilisateur, EmailUtilisateur, DateInscriptionUtilisateur);
 
 **AComme** (_**#IdMusique**_, _**#NomStyle**_);
 
