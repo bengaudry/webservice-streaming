@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('artiste', function (Blueprint $table) {
+        Schema::create('albums', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('nom');
+            $table->string("nom");
+            $table->date("date_sortie");
+            $table->foreignId("artiste_id")->constrained("artistes")->cascadeOnDelete();
         });
     }
 
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('artiste');
+        Schema::dropIfExists('album');
     }
 };
