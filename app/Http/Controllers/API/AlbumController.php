@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\Models\Album;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,7 @@ class AlbumController extends Controller
      */
     public function index()
     {
-        return response()->json(Album::paginate(100));
+        return response()->json(Album::paginate(50));
     }
 
     /**

@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string("nom");
             $table->integer("duree_secondes");
             $table->decimal("prix", 6, 2);
-            $table->foreignId("album_id")->constrained("albums");
+            $table->foreignId("album_id")->constrained("albums")->cascadeOnDelete();
+            $table->foreignId("artiste_id")->constrained("artistes")->cascadeOnDelete();
         });
     }
 

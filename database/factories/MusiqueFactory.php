@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Album;
 use App\Models\Musique;
+use App\Models\StyleMusique;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,12 +19,24 @@ class MusiqueFactory extends Factory
      */
     public function definition(): array
     {
+        $album = Album::inRandomOrder()->firstOrFail();
         return [
             'nom' => implode(' ', $this->faker->words($this->faker->numberBetween(1, 3))),
             'duree_secondes' => $this->faker->numberBetween(30, 600),
             'prix' => $this->faker->randomFloat(2, 0, 10),
-            'album_id' => Album::inRandomOrder()->firstOrFail()->id,
+            'album_id' => $album->id,
+            'artiste_id' => $album->artiste_id,
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (Musique $musique) {
+            $styles = StyleMusique::inRandomOrder()
+                ->limit($this->faker->numberBetween(1, 3))
+                ->pluck('id');
+            $musique->styles()->attach($styles);
+        });
     }
 
     /**

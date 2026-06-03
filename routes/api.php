@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\UserController;
-use \App\Http\Controllers\ArtisteController;
-use \App\Http\Controllers\AlbumController;
-use App\Http\Controllers\MusiqueController;
-use \App\Models\AchatUtilisateur;
+use App\Http\Controllers\API\AlbumController;
+use App\Http\Controllers\API\ArtisteController;
+use App\Http\Controllers\API\MusiqueController;
+use App\Http\Controllers\API\UserController;
+use App\Models\AchatUtilisateur;
 use App\Models\Musique;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;

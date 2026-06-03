@@ -1,23 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
-use App\Models\Musique;
+use App\Http\Controllers\Controller;
+use App\Models\Artiste;
 use Illuminate\Http\Request;
 
-class MusiqueController extends Controller
+class ArtisteController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return response()->json(Musique::paginate(100));
-    }
-
-    public function index_free()
-    {
-        return response()->json(Musique::filter(['prix' => 0])->paginate(100));
+        return response()->json(Artiste::paginate(50));
     }
 
     /**
