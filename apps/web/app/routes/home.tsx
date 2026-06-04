@@ -44,7 +44,7 @@ export default function Home() {
                 </span>
               </div>
 
-              <span>{musique.prix}€</span>
+              <span>{musique.prix == 0 ? "Gratuit" : `${musique.prix}€`}</span>
             </li>
           ))}
         </ul>
