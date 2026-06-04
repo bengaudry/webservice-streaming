@@ -12,7 +12,15 @@ class MusiqueSeeder extends Seeder
      */
     public function run(): void
     {
-        Musique::factory(500)->free()->create();
-        Musique::factory(1500)->paid()->create();
+        $types = array_merge(
+            array_fill(0, 150, 'free'),
+            array_fill(0, 500, 'paid')
+        );
+
+        shuffle($types);
+
+        foreach ($types as $type) {
+            Musique::factory()->$type()->create();
+        }
     }
 }
