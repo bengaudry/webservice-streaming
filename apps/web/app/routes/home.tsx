@@ -34,7 +34,7 @@ export default function Home() {
                         <span className="text-sm text-neutral-500">{musique.artiste.nom}</span>
                     </div>
 
-                    <span>{musique.prix}</span>
+                    <span>{musique.prix}€</span>
                 </li>
             ))}
         </ul>)}
