@@ -24,25 +24,48 @@ export default function Home() {
     const isCorrect = musiques !== null && musiques !== undefined;
 
     const [searchParams, setSearchParams] = useSearchParams();
+    const [showPaidMusics, setShowPaidMusics] = useState(true);
 
     const pageNumber = parseInt(searchParams.get("page") ?? "1");
 
-    useEffect(() => {
+    const fetchMusiques = (includePaidMusics = false) => {
         setMusiques(undefined);
-        MusiqueService.all(pageNumber)
-            .then(setMusiques)
-            .catch(() => setMusiques(null));
-    }, [searchParams]);
+        if (includePaidMusics) {
+            MusiqueService.all(pageNumber)
+                .then(setMusiques)
+                .catch(() => setMusiques(null));
+        } else {
+            MusiqueService.free(pageNumber)
+                .then(setMusiques)
+                .catch(() => setMusiques(null));
+        }
+    }
+
+    useEffect(() => {
+        fetchMusiques(showPaidMusics);
+    }, [searchParams, showPaidMusics]);
+
+    const handlePaidMusicsCheckboxToggle = () => {
+        setShowPaidMusics((s) => !s)
+    }
 
     return (
-        <div>
+        <div className="max-w-md mx-auto">
+            <header className="mb-5 p-6">
+                <label htmlFor="show-paid-musics-checkbox" className="mr-4">
+                    Afficher les musiques payantes
+                </label>
+                <input id="show-paid-musics-checkbox" type="checkbox" onInput={handlePaidMusicsCheckboxToggle} checked={showPaidMusics}/>
+            </header>
+
             {isLoading && <p>Chargement...</p>}
             {hasError && <p>Erreur</p>}
             {isCorrect && (
-                <ul className="flex flex-col gap-4 p-6 max-w-md mx-auto">
+                <ul className="flex flex-col gap-4">
                     {musiques.data.map((musique) => (
-                        <li key={musique.id} className="not-last:border-b border-neutral-800 py-3">
-                            <NavLink to={`/music/${musique.id}`} className="flex flex-row items-center justify-between gap-6">
+                        <li key={musique.id} className="not-last:border-b border-neutral-800 py-3 px-6 rounded-xl hover:bg-neutral-800 transition-colors">
+                            <NavLink to={`/music/${musique.id}`}
+                                     className="flex flex-row items-center justify-between gap-6">
 
                                 <div>
                                     <span className="block text-lg">{musique.nom}</span>

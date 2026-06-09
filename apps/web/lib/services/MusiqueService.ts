@@ -21,6 +21,11 @@ export class MusiqueService extends Service {
         return data;
     }
 
+    static async free(pageNumber: number = 1): Promise<Paginated<Musique>> {
+        const {data} = await axios.get(API_BASE_URL + "/musics/free?include=artiste&page=" + pageNumber);
+        return data;
+    }
+
     static async get(accessToken: string, musiqueId: number): Promise<{ musique: Musique; owns?: boolean }> {
         const {data: musique} = await axios.get(API_BASE_URL + "/musics/" + musiqueId + "?include=artiste");
 
