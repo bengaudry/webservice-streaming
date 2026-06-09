@@ -2,6 +2,7 @@ import { type SubmitEvent, useState } from "react";
 import { UserService } from "../../../lib/services/UserService";
 import { NavLink, useNavigate } from "react-router";
 import { Input } from "../../../components/Input";
+import {useAuth} from "../../../lib/hooks/useAuth";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -12,6 +13,7 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
+  const { setUser, setAccessToken } = useAuth();
 
   const handleFormSubmit = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -20,7 +22,11 @@ export default function RegisterPage() {
     setIsLoading(true);
 
     UserService.register(name, email, password)
-      .then(() => navigate("/"))
+        .then((response) => {
+          setUser(response.user);
+          setAccessToken(response.access_token)
+          navigate("/")
+        })
       .catch((err: any) => {
         if (err.errors && typeof err.errors === "object") {
           // Format: { field: ["error message"] } -> { field: "error message" }

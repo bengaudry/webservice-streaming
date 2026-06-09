@@ -26,7 +26,8 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
@@ -39,17 +40,19 @@ class UserController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
+            'user' => new UserResource($user)
         ]);
     }
 
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         $request->validate([
             'email' => 'required|email|max:50',
             'password' => 'required|string|min:8',
         ]);
         try {
             $user = User::where('email', $request->email)->first();
-            if(!$user || !Hash::check($request->password, $user->password)) {
+            if (!$user || !Hash::check($request->password, $user->password)) {
                 throw ValidationException::withMessages([
                     'email' => 'The provided credentials are erroneous.'
                 ]);
@@ -63,16 +66,17 @@ class UserController extends Controller
             return response()->json([
                 'access_token' => $token,
                 'token_type' => 'Bearer',
+                'user' => new UserResource($user)
             ]);
-        }
-        catch(QueryException $e) {
+        } catch (QueryException $e) {
             Log::error('Erreur accès base de données');
             return response()->json([
                 'message' => 'Ressource indisponible.'], 500);
         }
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         auth()->user()->tokens()->delete();
 
         return response()->json([

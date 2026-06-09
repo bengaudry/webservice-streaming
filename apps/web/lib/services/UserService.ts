@@ -19,7 +19,7 @@ export class UserService {
         throw error;
       }
 
-      return data.access_token;
+      return data;
     } catch (err: any) {
       if (err.response?.data?.errors) {
         const error = new Error("Validation failed");

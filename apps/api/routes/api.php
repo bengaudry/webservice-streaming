@@ -15,25 +15,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/user/logout', [UserController::class, 'logout']);
 
     # achat de musique
-    Route::post("/musics/buy", function (Request $request) {
-       $request->validate([
-           'musique_id' => 'required|integer',
-       ]);
-
-       $musique = Musique::find($request->musique_id);
-       $user = Auth::user();
-
-       AchatUtilisateur::create([
-           'user_id' => $user->id,
-           'musique_id' => $musique->id,
-           'date_achat' => now(),
-       ]);
-    });
+    Route::post("/musics/buy", [MusiqueController::class, 'buy']);
+    Route::get("/musics/{musique_id}/own", [MusiqueController::class, 'owns']);
 });
 
 # musiques
 Route::get("/musics", [MusiqueController::class, 'index']);
 Route::get("/musics/free", [MusiqueController::class, 'index_free']);
+Route::get("/musics/{musique_id}", [MusiqueController::class, 'show']);
 
 # albums
 Route::get("/albums", [AlbumController::class, 'index']);
