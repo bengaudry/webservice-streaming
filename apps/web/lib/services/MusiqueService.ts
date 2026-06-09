@@ -1,7 +1,6 @@
-import axios from "axios";
-import {API_BASE_URL} from "../constants";
 import type {Paginated} from "../types/Paginated";
 import {Service} from "./Service";
+import {api} from "./api";
 
 export type Musique = {
     id: number;
@@ -17,39 +16,30 @@ export type Musique = {
 
 export class MusiqueService extends Service {
     static async all(pageNumber: number = 1): Promise<Paginated<Musique>> {
-        const {data} = await axios.get(API_BASE_URL + "/musics?include=artiste&page=" + pageNumber);
+        const {data} = await api.get("/api/musics?include=artiste&page=" + pageNumber);
         return data;
     }
 
     static async free(pageNumber: number = 1): Promise<Paginated<Musique>> {
-        const {data} = await axios.get(API_BASE_URL + "/musics/free?include=artiste&page=" + pageNumber);
+        const {data} = await api.get("/api/musics/free?include=artiste&page=" + pageNumber);
         return data;
     }
 
-    static async get(accessToken: string, musiqueId: number): Promise<{ musique: Musique; owns?: boolean }> {
-        const {data: musique} = await axios.get(API_BASE_URL + "/musics/" + musiqueId + "?include=artiste");
+    static async get(musiqueId: number): Promise<{ musique: Musique; owns?: boolean }> {
+        const {data: musique} = await api.get("/api/musics/" + musiqueId + "?include=artiste");
 
         let owns: boolean | undefined = undefined;
-        if (accessToken) {
-            const {data: ownsData} = await axios.get(API_BASE_URL + "/musics/owns", {
-                headers: {
-                    "Authorization": `Bearer ${accessToken}`
-                }
-            });
+        try {
+            const {data: ownsData} = await api.get(`/api/musics/${musiqueId}/own`);
             owns = ownsData.owns;
-        }
+        } catch (e) {}
 
         return {musique, owns};
     }
 
-    static async buy(accessToken: string, id: number): Promise<void> {
-        console.log(accessToken)
-        const {data} = await axios.post(API_BASE_URL + "/musics/buy", {
+    static async buy(id: number): Promise<void> {
+        const {data} = await api.post("/api/musics/buy", {
             musique_id: id,
-        }, {
-            headers: {
-                "Authorization": `Bearer ${accessToken}`
-            }
         });
 
         if (!("success" in data) || data.success !== true) throw new Error("")

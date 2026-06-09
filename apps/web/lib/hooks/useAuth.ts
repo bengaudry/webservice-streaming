@@ -1,5 +1,6 @@
 import {useContext} from "react";
 import {AuthContext} from "../context/AuthContext";
+import {api} from "../services/api";
 
 export function useAuth() {
     const authContext = useContext(AuthContext);
@@ -7,12 +8,13 @@ export function useAuth() {
         throw new Error('useAuth must be used within AuthProvider');
     }
 
-    const isAuthenticated = () => authContext.data !== null;
-    const getToken = () => authContext.data ? authContext.data.accessToken : null
-    const getUser = () => authContext.data ? authContext.data.user : null
+    const {user, setUser, isLoading} = authContext;
 
-    const setAccessToken = authContext.setAccessToken
-    const setUser = authContext.setUser
+    const isAuthenticated: boolean = user !== null;
+    const logout = () => {
+        setUser(null)
+        void api.post("/user/logout");
+    }
 
-    return { isAuthenticated, getToken, getUser, setAccessToken, setUser };
+    return {isAuthenticated, user, setUser, logout, isLoading};
 }

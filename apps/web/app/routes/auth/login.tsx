@@ -1,6 +1,6 @@
-import { type SubmitEvent, useState } from "react";
+import {type SubmitEvent, useEffect, useState} from "react";
 import { UserService } from "../../../lib/services/UserService";
-import { NavLink, useNavigate } from "react-router";
+import {NavLink, redirect, useNavigate} from "react-router";
 import { Input } from "../../../components/Input";
 import {useAuth} from "../../../lib/hooks/useAuth";
 
@@ -12,7 +12,13 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
-  const { setAccessToken, setUser } = useAuth()
+  const { isAuthenticated, setUser } = useAuth()
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      throw navigate("/");
+    }
+  }, [])
 
   const handleFormSubmit = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -23,7 +29,6 @@ export default function LoginPage() {
     UserService.login(email, password)
       .then((response) => {
         setUser(response.user);
-        setAccessToken(response.access_token)
         navigate("/")
       })
       .catch((err: any) => {

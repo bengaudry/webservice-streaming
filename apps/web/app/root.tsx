@@ -35,19 +35,19 @@ export function Layout({children}: { children: React.ReactNode }) {
             <Links/>
         </head>
         <body>
-            <AuthProvider>
-                <Navbar/>
-                {children}
-                <ScrollRestoration/>
-                <Scripts/>
-            </AuthProvider>
+        {children}
+        <ScrollRestoration/>
+        <Scripts/>
         </body>
         </html>
     );
 }
 
 export default function App() {
-    return <Outlet/>;
+    return <AuthProvider>
+        <Navbar/>
+        <Outlet/>
+    </AuthProvider>;
 }
 
 export function ErrorBoundary({error}: Route.ErrorBoundaryProps) {

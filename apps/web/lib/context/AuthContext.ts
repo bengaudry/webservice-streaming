@@ -3,14 +3,11 @@ import {createContext} from "react";
 export type User = {
     id: number;
     email: string;
-    name: string;
+    nom: string;
 }
 
 export const AuthContext = createContext<{
-    data: {
-        accessToken: string;
-        user: User
-    } | null
-    setAccessToken: (accessToken: string) => void;
-    setUser: (user: User) => void;
+    user: User | null;
+    setUser: (user: User | null) => void;
+    isLoading: boolean
 } | undefined>(undefined);

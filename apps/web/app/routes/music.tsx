@@ -1,42 +1,57 @@
 import type {Route} from "./+types/music"
-import {MusiqueService} from "../../lib/services/MusiqueService";
+import {type Musique, MusiqueService} from "../../lib/services/MusiqueService";
 import {useAuth} from "../../lib/hooks/useAuth";
 import {redirect, useNavigate} from "react-router";
+import {useEffect, useState} from "react";
 
 export async function loader({params}: Route.LoaderArgs) {
-    console.log(params.id, parseInt(params.id))
-
-    const {getToken} = useAuth()
-
-    const token = getToken()
-    if (!token) {
-        return redirect("/")
-    }
-
-    return await MusiqueService.get(token, parseInt(params.id));
+    return {params}
 }
 
 export default function MusicDetailsPage({loaderData}: Route.ComponentProps) {
-    const buyBtnLabel = loaderData.owns
+    const {params} = loaderData;
+    const musicId = params.id;
+
+    const [musicDetails, setMusicDetails] = useState<{ musique: Musique, owns?: boolean } | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchMusicDetails = async () => {
+            setIsLoading(true);
+            setMusicDetails(await MusiqueService.get(parseInt(musicId)));
+            setIsLoading(false);
+        }
+        void fetchMusicDetails();
+    }, [musicId]);
+
+    const buyBtnLabel = musicDetails && musicDetails.owns
         ? "Acheté"
-        : `Acheter (${loaderData.musique.prix}€)`
+        : `Acheter (${musicDetails?.musique.prix ?? '-'}€)`
 
     const auth = useAuth()
     const navigate = useNavigate()
 
     const handleClickBtn = () => {
-        const accessToken = auth.getToken()
-        if (!accessToken || !auth.isAuthenticated()) {
+        if (!auth.isAuthenticated) {
             return navigate("/login")
         }
-        MusiqueService.buy(accessToken, loaderData.musique.id).then(() => navigate("#")).catch(alert)
+        if (!musicDetails?.musique.id) {
+            alert("Un problème est survenu, essayez d'actualiser la page.")
+            return;
+        }
+        try {
+            MusiqueService.buy(musicDetails.musique.id)
+            navigate("#")
+        } catch (e) {
+            navigate("/login")
+        }
     }
 
     return <div className="p-6">
-        <h1 className="font-bold text-3xl mb-1">{loaderData.musique.nom}</h1>
-        <span>{loaderData.musique.artiste.nom}</span>
+        <h1 className="font-bold text-3xl mb-1">{musicDetails?.musique.nom}</h1>
+        <span>{musicDetails?.musique.artiste.nom}</span>
 
-        <button disabled={loaderData.owns}
+        <button disabled={musicDetails?.owns}
                 className="block mt-4 bg-blue-500 rounded-md py-2 px-6 font-semibold disabled:opacity-20"
                 onClick={handleClickBtn}>
             {buyBtnLabel}

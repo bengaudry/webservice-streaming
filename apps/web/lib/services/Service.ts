@@ -1,17 +1,7 @@
-import {useAuth} from "../hooks/useAuth";
+import {api} from "./api";
 
 export abstract class Service {
 
-    protected static getAccessToken(): string | null {
-        try {
-            return this.getAccessTokenOrThrow()
-        } catch (e) {
-            return null;
-        }
-    }
-
-    protected static getAccessTokenOrThrow(): string | null {
-        return useAuth().getToken();
-    }
+    protected static api = api
 
 }
